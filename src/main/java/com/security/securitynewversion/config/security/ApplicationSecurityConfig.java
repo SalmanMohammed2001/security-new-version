@@ -41,7 +41,19 @@ public class ApplicationSecurityConfig {
                 .password(passwordEncoder.encode("1234"))
                 .roles("CUSTOMER")
                 .build();
-        return new InMemoryUserDetailsManager(user1);
+
+        UserDetails  user2= User.builder()
+                .username("user2")
+                .password(passwordEncoder.encode("1234"))
+                .roles("MANAGER")
+                .build();
+
+        UserDetails  user3= User.builder()
+                .username("user3")
+                .password(passwordEncoder.encode("1234"))
+                .roles("ADMIN")
+                .build();
+        return new InMemoryUserDetailsManager(user1,user2,user3);
     }
 
 
