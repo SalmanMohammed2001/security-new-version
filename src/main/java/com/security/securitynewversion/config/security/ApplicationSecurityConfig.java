@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
@@ -18,8 +19,13 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @Configuration
 @EnableWebSecurity
 public class ApplicationSecurityConfig {
+    private final PasswordEncoder passwordEncoder;
 
-     @Bean
+    public ApplicationSecurityConfig(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
          http.authorizeHttpRequests(authz -> authz
                  .requestMatchers("/api/v1/customers/list/**").permitAll()
@@ -32,7 +38,7 @@ public class ApplicationSecurityConfig {
     public UserDetailsService userDetailsService(){
         UserDetails  user1= User.builder()
                 .username("user1")
-                .password("1234")
+                .password(passwordEncoder.encode("1234"))
                 .roles("CUSTOMER")
                 .build();
         return new InMemoryUserDetailsManager(user1);
